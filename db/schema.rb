@@ -17,7 +17,6 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "fact_names", ["id"], :name => "index_fact_names_on_id"
   add_index "fact_names", ["name"], :name => "index_fact_names_on_name"
 
   create_table "fact_values", :force => true do |t|
@@ -28,13 +27,13 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "fact_values", ["id"], :name => "index_fact_values_on_id"
-  add_index "fact_values", ["fact_name_id"], :name => "index_fact_values_on_fact_name_id"
   add_index "fact_values", ["host_id"], :name => "index_fact_values_on_host_id"
+  add_index "fact_values", ["fact_name_id"], :name => "index_fact_values_on_fact_name_id"
 
   create_table "hosts", :force => true do |t|
     t.string   "name",            :null => false
     t.string   "ip"
+    t.string   "environment"
     t.datetime "last_compile"
     t.datetime "last_freshcheck"
     t.datetime "last_report"
@@ -43,9 +42,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "hosts", ["id"], :name => "index_hosts_on_id"
-  add_index "hosts", ["source_file_id"], :name => "index_hosts_on_source_file_id"
   add_index "hosts", ["name"], :name => "index_hosts_on_name"
+  add_index "hosts", ["source_file_id"], :name => "index_hosts_on_source_file_id"
 
   create_table "param_names", :force => true do |t|
     t.string   "name",       :null => false
@@ -53,7 +51,6 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "param_names", ["id"], :name => "index_param_names_on_id"
   add_index "param_names", ["name"], :name => "index_param_names_on_name"
 
   create_table "param_values", :force => true do |t|
@@ -65,9 +62,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "param_values", ["id"], :name => "index_param_values_on_id"
-  add_index "param_values", ["param_name_id"], :name => "index_param_values_on_param_name_id"
   add_index "param_values", ["resource_id"], :name => "index_param_values_on_resource_id"
+  add_index "param_values", ["param_name_id"], :name => "index_param_values_on_param_name_id"
 
   create_table "puppet_tags", :force => true do |t|
     t.string   "name"
@@ -84,9 +80,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "resource_tags", ["id"], :name => "index_resource_tags_on_id"
-  add_index "resource_tags", ["resource_id"], :name => "index_resource_tags_on_resource_id"
   add_index "resource_tags", ["puppet_tag_id"], :name => "index_resource_tags_on_puppet_tag_id"
+  add_index "resource_tags", ["resource_id"], :name => "index_resource_tags_on_resource_id"
 
   create_table "resources", :force => true do |t|
     t.text     "title",          :null => false
@@ -99,10 +94,9 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "resources", ["id"], :name => "index_resources_on_id"
-  add_index "resources", ["host_id"], :name => "index_resources_on_host_id"
+  add_index "resources", ["title", "restype"], :name => "index_resources_on_title_and_restype"
   add_index "resources", ["source_file_id"], :name => "index_resources_on_source_file_id"
-  add_index "resources", ["restype", "title"], :name => "typentitle"
+  add_index "resources", ["host_id"], :name => "index_resources_on_host_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
@@ -111,8 +105,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "updated_at"
   end
 
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
 
   create_table "source_files", :force => true do |t|
     t.string   "filename"
@@ -121,7 +115,6 @@ ActiveRecord::Schema.define(:version => 3) do
     t.datetime "created_at"
   end
 
-  add_index "source_files", ["id"], :name => "index_source_files_on_id"
   add_index "source_files", ["filename"], :name => "index_source_files_on_filename"
 
   create_table "users", :force => true do |t|
